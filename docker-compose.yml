@@ -1,0 +1,58 @@
+version: "3.6"
+volumes:
+    datadb:
+        external: false
+services:
+    nginx:
+        build:
+            context: ./src/nginx
+        image: sds/nginx
+        container_name: nginx-$COMPOSE_PROJECT_NAME
+        ports:
+            - 80:80
+        networks:
+            - developer-network
+        depends_on:
+            - php
+        volumes:
+            - ./public:/var/www/html
+            - ./src/nginx/nginx.conf:/etc/nginx/nginx.conf
+            - ./src/nginx/default.conf:/etc/nginx/conf.d/default.conf
+            - ./src/nginx/log/:/var/log/nginx/
+    php:
+        build:
+            context: ./src/php/
+        image: sds/php
+        container_name: php-$COMPOSE_PROJECT_NAME
+        environment:
+            PHP_XDEBUG_ENABLED: 1
+            XDEBUG_CONFIG: remote_host=192.168.99.100
+        expose:
+            - 9000
+        ports:
+            - 9000:9000
+        networks:
+            - developer-network
+        depends_on:
+            - mariadb
+        volumes:
+            - ./public:/var/www/html
+    mariadb:
+        build:
+            context: ./src/mariadb
+        image: sds/mariadb
+        container_name: mariadb-$COMPOSE_PROJECT_NAME
+        volumes:
+            - datadb:/var/lib/mysql
+        environment:
+            MYSQL_ROOT_PASSWORD: 123456
+            MYSQL_USER: projeto
+            MYSQL_PASSWORD: projeto
+        ports:
+            - 3306:3306
+        networks:
+            - developer-network
+networks:
+    developer-network:
+        driver: bridge
+        name: developer-network-$COMPOSE_PROJECT_NAME
