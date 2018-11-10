@@ -6,7 +6,7 @@ services:
     nginx:
         build:
             context: ./src/nginx
-        image: sds/nginx
+        image: helpdev/nginx
         container_name: nginx-$COMPOSE_PROJECT_NAME
         ports:
             - 80:80
@@ -22,7 +22,7 @@ services:
     php:
         build:
             context: ./src/php/
-        image: sds/php
+        image: helpdev/php
         container_name: php-$COMPOSE_PROJECT_NAME
         environment:
             PHP_XDEBUG_ENABLED: 1
@@ -40,7 +40,7 @@ services:
     mariadb:
         build:
             context: ./src/mariadb
-        image: sds/mariadb
+        image: helpdev/mariadb
         container_name: mariadb-$COMPOSE_PROJECT_NAME
         volumes:
             - datadb:/var/lib/mysql
