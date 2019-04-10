@@ -1,4 +1,7 @@
-FROM nginx:latest
+ARG TIMEZONE
+ARG VERSION_NGINX
 
-ENV TZ=America/Sao_Paulo
+FROM nginx:${VERSION_NGINX}
+
+ENV TZ=${TIMEZONE}
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone

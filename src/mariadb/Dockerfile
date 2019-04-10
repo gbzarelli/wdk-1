@@ -1,4 +1,7 @@
-FROM mariadb:latest
+ARG TIMEZONE
+ARG VERSION_MARIADB
 
-ENV TZ=America/Sao_Paulo
+FROM mariadb:${VERSION_MARIADB}
+
+ENV TZ=${TIMEZONE}
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
